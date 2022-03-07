@@ -43,7 +43,7 @@ app.set('view engine', 'ejs');
 app.get('/', async (req, res) => {
     // GET LIST OF MOVIES
     const query = {};
-    const options = {sort: {year: -1, name: 1}}
+    const options = {sort: {year: -1, name:1}}
     const movies = await db.collection('movies').find(query, options).toArray();
 
     // RENDER PAGE
@@ -51,16 +51,14 @@ app.get('/', async (req, res) => {
     res.render('movielist', {title, movies});
 });
 
-app.get('/movies/:movieId/:slug', (req, res) => {
+app.get('/movies/:movieId/:slug', async (req, res) => {
 
     // FIND MOVIE
-    const id = req.params.movieId;
-    // TODO
-    console.log("TODO: get movie from DB");
-    const movie = {};
-    const title = `Moviedetails for ${movie.name}`;
+    const query = { _id: ObjectId(req.params.movieId)};
+    const movie = await db.collection('movies').findOne(query);
 
     // RENDER PAGE
+    const title = `Moviedetails for ${movie.name}`;
     res.render('moviedetails', {title, movie});
 });
 
